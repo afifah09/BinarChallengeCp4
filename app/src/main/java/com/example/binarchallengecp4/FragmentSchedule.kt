@@ -24,7 +24,8 @@ class FragmentSchedule(val schedule: Schedule?) : DialogFragment() {
     var editClick:(Schedule)->Unit = {}
 
     private lateinit var binding: FragmentScheduleBinding
-    private var myDatabase: MyDatabase? = null
+    lateinit var scheduleRepository: ScheduleRepository
+    //private var myDatabase: MyDatabase? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,7 +37,8 @@ class FragmentSchedule(val schedule: Schedule?) : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        myDatabase = MyDatabase.getInstance(requireContext())
+        scheduleRepository = ScheduleRepository(requireContext())
+        //myDatabase = MyDatabase.getInstance(requireContext())
         binding.btnPilih.setOnClickListener {
             val calender = CalenderFragment(System.currentTimeMillis()) {
                 binding.btnPilih.text = it
@@ -47,8 +49,8 @@ class FragmentSchedule(val schedule: Schedule?) : DialogFragment() {
         val spinnerAdapter = ArrayAdapter<String>(requireContext(), R.layout.simple_spinner_item)
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         lifecycleScope.launch(Dispatchers.IO) {
-            val myDb = myDatabase?.scheduleDao()
-            val listPeserta = myDb?.getAllPeserta()
+           // val myDb = myDatabase?.scheduleDao()
+            val listPeserta = scheduleRepository.getAllPeserta()
 
             activity?.runOnUiThread {
                 val spinnerlist = arrayListOf("Pilih Peserta")

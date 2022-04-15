@@ -20,7 +20,8 @@ import kotlinx.coroutines.launch
 
 class FragmentLogin : Fragment() {
     private lateinit var binding: FragmentLoginBinding
-    private var myDatabase: MyDatabase? = null
+    //private var myDatabase: MyDatabase? = null
+    lateinit var authRepository: AuthRepository
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -32,7 +33,8 @@ class FragmentLogin : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        myDatabase = MyDatabase.getInstance(requireContext())
+       // myDatabase = MyDatabase.getInstance(requireContext())
+        authRepository = AuthRepository(requireContext())
         val sharedPreference = context?.getSharedPreferences("SHARED_FILE", Context.MODE_PRIVATE)
 
         val islogin = sharedPreference?.getString("islogin","")
@@ -46,7 +48,7 @@ class FragmentLogin : Fragment() {
                 val password = binding.etLoginPassword.text.toString()
 
                 lifecycleScope.launch(Dispatchers.IO) {
-                    val login = myDatabase?.userDao()?.login(email, password)
+                    val login = authRepository.login(email, password)
                     activity?.runOnUiThread{
                         //untuk mengecek apakah login sudah sukses atau belum
                         if (login==null){

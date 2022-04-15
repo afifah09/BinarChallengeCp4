@@ -18,7 +18,8 @@ import kotlinx.coroutines.launch
 class PesertaFragment : DialogFragment() {
 
     private lateinit var binding: FragmentPesertaBinding
-    private var myDatabase: MyDatabase? = null
+    //private var myDatabase: MyDatabase? = null
+    lateinit var scheduleRepository: ScheduleRepository
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -29,14 +30,15 @@ class PesertaFragment : DialogFragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        myDatabase = MyDatabase.getInstance(requireContext())
+        //myDatabase = MyDatabase.getInstance(requireContext())
+        scheduleRepository = ScheduleRepository(requireContext())
         binding.btnSavePeserta.setOnClickListener {
             val peserta = Peserta(
                 null,
                 binding.etNamaPeserta.text.toString()
             )
             lifecycleScope.launch(Dispatchers.IO) {
-                myDatabase?.scheduleDao()?.insertPeserta(peserta)
+                scheduleRepository.insertPeserta(peserta)
                 dismiss()
             }
         }

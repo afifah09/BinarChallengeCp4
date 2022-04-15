@@ -16,7 +16,8 @@ import kotlinx.coroutines.launch
 
 class FragmentRegister : Fragment() {
     private lateinit var binding: FragmentRegisterBinding
-    private var myDatabase: MyDatabase? = null
+    //private var myDatabase: MyDatabase? = null
+    lateinit var authRepository: AuthRepository
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -28,7 +29,8 @@ class FragmentRegister : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        myDatabase = MyDatabase.getInstance(requireContext())
+        //myDatabase = MyDatabase.getInstance(requireContext())
+        authRepository = AuthRepository(requireContext())
         binding.btnRegister.setOnClickListener {
             val user = User(
                 null,
@@ -36,7 +38,7 @@ class FragmentRegister : Fragment() {
                 binding.etRegisterPassword.text.toString()
             )
             lifecycleScope.launch(Dispatchers.IO) {
-                myDatabase?.userDao()?.insertUser(user)
+                authRepository.insertUser(user)
                 activity?.runOnUiThread{
                     it.findNavController().popBackStack()
                 }

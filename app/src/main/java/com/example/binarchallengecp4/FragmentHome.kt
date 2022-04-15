@@ -22,7 +22,8 @@ import kotlinx.coroutines.launch
 
 class FragmentHome : Fragment() {
     private lateinit var binding: FragmentHomeBinding
-    private var myDatabase: MyDatabase? = null
+    lateinit var scheduleRepository: ScheduleRepository
+    //private var myDatabase: MyDatabase? = null
     private lateinit var adapter:ScheduleAdapter
 
     override fun onCreateView(
@@ -35,8 +36,8 @@ class FragmentHome : Fragment() {
     }
     private fun fetchData(){
         lifecycleScope.launch(Dispatchers.IO) {
-            val myDb = myDatabase?.scheduleDao()
-            val listschedule = myDb?.getAllSchedule()
+            //val myDb = myDatabase?.scheduleDao()
+            val listschedule = scheduleRepository.getAllSchedule()
 
             activity?.runOnUiThread {
                 listschedule?.let {
@@ -47,25 +48,26 @@ class FragmentHome : Fragment() {
     }
     fun deleteData(schedule:Schedule){
         lifecycleScope.launch(Dispatchers.IO){
-            myDatabase?.scheduleDao()?.deleteSchedule(schedule)
+            scheduleRepository.deleteSchedule(schedule)
 
         }
     }
     fun editData(schedule: Schedule) {
         lifecycleScope.launch(Dispatchers.IO) {
-            myDatabase?.scheduleDao()?.updateSchedule(schedule)
+           scheduleRepository.updateSchedule(schedule)
 
         }
     }
     fun adddata (schedule: Schedule){
         lifecycleScope.launch(Dispatchers.IO) {
-            myDatabase?.scheduleDao()?.insertSchedule(schedule)
+          scheduleRepository.insertSchedule(schedule)
 
         }
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        myDatabase = MyDatabase.getInstance(requireContext())
+        scheduleRepository = ScheduleRepository(requireContext())
+       // myDatabase = MyDatabase.getInstance(requireContext())
         binding.buat.setOnClickListener {
             val scheduleDialog = FragmentSchedule(null)
             scheduleDialog.saveClick={
